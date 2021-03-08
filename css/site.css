@@ -1,0 +1,151 @@
+body {
+    background-color: #eee;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.form-signin {
+    max-width: 35rem;
+    padding: 1rem;
+    margin: 0 auto;
+}
+
+.form-signin .form-control {
+    margin: 0.5rem auto;
+    padding: 1rem 1rem;
+}
+
+.act-text {
+    color: rgb(241, 170, 38);
+    font-weight: bold;
+}
+
+.act-text :hover {
+    color: rgb(255, 198, 92);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.act-text :active {
+    color: rgb(255, 198, 92);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.form-area {
+    background-color: rgb(250, 250, 250);
+    border-width: 0.05rem;
+    border-color: #bbb;
+    width: 95%;
+    margin: 0.5rem auto;
+    max-width: 600rem;
+    padding: 1rem 2.5rem;
+    border-radius: 0.5rem;
+}
+
+.ele-right {
+    margin-right: 0;
+}
+
+.file-list {
+    display: table;
+    background-color: #fefefe;
+    color: #000;
+    width: 100%;
+}
+
+.filenm {
+    padding: 0 0.5em 0.5em .2em;
+    vertical-align: middle;
+}
+
+.filefmt {
+    padding: 0 0.5em 0.5em .2em;
+    vertical-align: middle;
+}
+
+.filesz{
+    padding: 0 0.5em 0.5em .2em;
+    vertical-align: middle;
+}
+
+.filead{
+    padding: 0 0.5em 0.5em .2em;
+    vertical-align: middle;
+}
+@media (max-width: 768px) {
+    .filefmt {
+        display:none;
+    }
+
+    .filead {
+        display: none;
+    }
+}
+
+
+.option{
+    padding: 0 0.5em 0.5em .2em;
+}
+
+.file-list {
+    table-layout: fixed;
+    word-break: break-all;
+}
+
+.file-list .file-list-head {
+    border-style: solid;
+    border-bottom-color: #bbb;
+    border-width: 0 0 0.1rem 0;
+}
+
+.file-list .file-list-row td {
+    padding: 0.5em 0.5em;
+    border-color: transparent;
+    border-width: 0.1em 0;
+}
+
+a.file-link {
+    color: rgb(80, 80, 80);
+    text-decoration: none;
+}
+
+a.file-link:active, a.file-link:hover{
+    color: black;
+    text-decoration: underline;
+}
+
+.show-inline {
+    display: inline;
+}
+
+.file-list-row .controller {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .file-list-row .controller {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        padding: 0;
+    }
+}
+
+.file-list-row:hover .controller {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.controller:hover {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.file-list-row:hover {
+    background-color: rgb(241, 247, 255);
+}

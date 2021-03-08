@@ -1,0 +1,191 @@
+<head>
+    <title>文件管理</title>
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="./css/site.css" />
+    <script src="./js/jquery-3.5.1.min.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/vue.js"></script>
+
+    <style>
+        .space-forder-list {
+            width: 100%;
+            margin: 0;
+            border-style: solid;
+            border-color: #bbb;
+            background-color: #eee;
+            border-width: .1rem;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .space-forder-list-item .text{
+            width: 100%;
+        }
+
+        .space-forder-list-item .controller {
+            width: 0;
+            display: none;
+        }
+
+        .space-forder-list-item:hover .text {
+            width: 60%;
+            display: inline;
+        }
+        .space-forder-list-item:hover .controller {
+            width: 30%;
+            display: inline;
+        }
+
+        .space-forder-list-hide {
+            width: 0;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .space-forder-list-item {
+            width: 100%;
+            margin: 0;
+            background-color: #eee;
+            border-width: .1rem 0;
+            border-style: solid;
+            padding: 0.5rem 1rem;
+            color: black;
+        }
+
+        .space-forder-list-item :hover {
+            background-color: #efe;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app" class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#navbar-colps">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">{{appname}}</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-colps">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" @click="listView">浏览</a></li>
+                        <li><a href="#" id='uploadNav'>上传</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div>
+            <!-- 头部错误框 -->
+            <div class="alert alert-info" v-if="msg != ''">{{msg}} - <a class="act-text" @click="clearMsg">关闭</a></div>
+            <div class="alert alert-warning" v-if="warnmsg != ''">{{warnmsg}} - <a class="act-text" @click="clearWarn">关闭</a></div>
+            <div class="alert alert-danger" v-if="errmsg != ''">{{errmsg}} - <a class="act-text" @click="clearErr">关闭</a></div>
+            
+            <!-- 空间分类列表 -->
+            <div class="form-area">
+                <div class="form-area">
+                    <h4>分类筛选（文件夹） <a href="#" class="glyphicon glyphicon-list" @click="switchFoldersShow" title="切换列表显示"></a>
+                    </h4>
+                    <hr />
+                    <div v-if="dirNo == null">
+                        <ul class="space-forder-list" v-show='showFolds'>
+                            <li v-if='spaceFolders == null'>(空)</li>
+                            <li v-for="fold in spaceFolders" :key='spaceFolders.id' class='space-forder-list-item'>
+                                <div class='text'><a href='#' @click='switchFold(fold.id)'>{{fold.name}}</a></div>
+                                <div class='controller'><a href='#' class='glyphicon glyphicon-remove' @click='removeFold(fold.id)'></a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-else>
+                        <a href="#" @click='backMainDir'>
+                            查看全部分类文件</a>
+                    </div>
+                    <input v-model='folderName' type='text' placeholder="新建文件夹名称" class='form-control' style='display: inline; width: 60%; max-width: 30rem' />
+                    <a href='#' class="glyphicon glyphicon-add" @click='addFold' style='font-size: large; display: inline;'>+</a>
+                </div>
+                
+                    <div class='form-area' v-if='dirNo != null'>
+                        <h4>分类选项</h4>
+                        <hr />
+                        <button type="button" class='btn btn-danger' @click='removeFold(dirNo)'>删除</button>
+                        <input type='text' v-model='foldRename' placeholder="输入新分类名" style='max-width: 34em; width: 40%' class="form-control show-inline" />
+                        <button type="button" class='btn btn-primary' @click='rni(dirNo)'>重命名</button>
+                    </div>
+            </div>
+
+            <!-- 文件及分类列表 -->
+            <div v-if="view == 'list'" class='form-area'>
+                <!-- 若空间不为空 -->
+                <table v-if="fileEntries != null" class="file-list">
+                    <tr class="file-list-head">
+                        <td><div class="filenm">文件名</div></td>
+                        <td style="width:5em;" class='filefmt'><div >文件格式</div></td>
+                        <td style="width:6em;" class="filesz"><div >文件大小</div></td>
+                        <td style="width:5em;" class= 'filead'><div>审核状态</div></td><!--这个需要暴露给用户么？-->
+                        <td style="width:6em;" class="option"><div>操作</div></td><!--如果修改成图标这里也要改小-->
+                    </tr>
+                    <tr v-for="entry in fileEntries" :key="entry.id" class="file-list-row">
+                        <!-- <td><img :src="'img/' + entry.type + '.bmp'" height="1.5em" width="1.5em"/>{{entry.name}}</td> -->
+                        <td><a href="#" class='file-link' @click='previewWnd(entry)'>{{entry.name}}</a></td>
+                        <td class="filefmt">{{entry.type}}</td>
+                        <td class="filesz">{{entry.size}}</td>
+                        <td class="filead">{{entry.audit}}</td>
+                        <td >
+                            <span class='controller'>
+                                <a href='#' class='glyphicon glyphicon-tags' @click="previewWnd(entry)"></a>
+                                <a href='#' class="glyphicon glyphicon-remove" @click="rmitem(entry.sid)"></a>
+                                <a href='#' class="glyphicon glyphicon-save" @click="downld(entry)"></a>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                <!-- 空间为空时的处理 -->
+                <div v-else class="alert alert-info">
+                    <h3>您似乎还没有在此上载过任何文件</h3>
+                    <p><span class="text-primary">此空间为空。</span>想要把它填满的话，请点<a href="#" class="act-text" @click="uploadWnd">这里</a>上传一些东西。</p>
+                    <p><span class="text-primary">如果您确信曾上传过一些东西，</span>那么可能它们已经因为违规遭受管理员圣裁。下次请再小心一些。</p>
+                </div>
+            </div>
+
+            <!-- 文件上传 -->
+            <div v-if="view == 'upload'">
+                <div class="form-area">
+                    <div class="form-group">
+                        <h2>上传文件</h2>
+                        <hr />
+                        文件将上传到当前所在分类中。
+                        <input type="file"  id="uploadBox" name="uploadBox" /><!-- TODO:添加多文件上传支持 -->
+                    </div>
+                    <hr />
+                    <div class="ele-right">
+                        <button type="button" class="btn btn-primary" @click="upload" id='submitBtn'>提交</button>
+                        <button type="button" class="btn btn-secondary" @click="listView">返回</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图像预览 -->
+            <div v-if="view == 'imgpreview'">
+                <div class="form-area">
+                    <h3>{{viewPara.name}}</h3>
+                    <hr />
+                    文件大小：{{viewPara.size}} 创建日期：{{viewPara.date}}<br />
+                    <input type='text' v-model='fileRename' placeholder="输入新文件名" style='max-width: 34em; width: 40%' class="form-control show-inline" />
+                    <button type="button" class='btn btn-primary' @click='rnf(viewPara.id)'>重命名</button>
+                    <button type="button" class="btn btn-secondary" @click="listView">返回</button>
+                    <div class="center-block" v-if="viewPara.format == 'jpg' || viewPara.format == 'png' || viewPara.format == 'gif' || viewPara.format == 'jpeg' || viewPara.format == 'bmp'">
+                        <img :src="viewPara.uri" alt="一幅图像，它是你所选择之图像的预览" style="max-width: 100%; margin: 0 auto;" />
+                    </div>
+                    <div class="center-block text-danger" v-else style="font-size:x-large;">图像预览不可用</div>
+                    <hr />
+                    <button type="button" class="btn btn-secondary" @click="listView">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/home.js"></script>
+</body>
