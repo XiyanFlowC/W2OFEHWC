@@ -30,10 +30,11 @@
                 accound: "",
                 alertmsg : ""
             },
-            create: function() {
+            created: function() {
                 var axd = localStorage.getItem('usrNo');
                 var ssx = localStorage.getItem('token');
-                if(axd != null && ssx != null) top.location = './home.htm';
+                var asx = localStorage.getItem('usrName')
+                if(axd != null && ssx != null && asx != null) top.location = './home.htm';
             },
             methods:{
                 login : function() {
@@ -58,6 +59,7 @@
                             {
                                 localStorage.setItem("usrNo", data.obj.userBean.userNo);
                                 localStorage.setItem("token", data.obj.token);
+                                localStorage.setItem('usrName', data.obj.userBean.userName);
                                 top.location = './home.htm'
                             }
                             else

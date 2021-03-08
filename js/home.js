@@ -48,6 +48,12 @@ var app = new Vue({
         // }]
     },
     methods: {
+        logout: function() {
+            localStorage.removeItem('usrName');
+            localStorage.removeItem('usrNo');
+            localStorage.removeItem('token');
+            top.location = './login.htm'
+        },
         userInfo: function() {
             window.open('userInfo.htm', '_blank', 'location=no,menubar=no,status=no,height=300,width=400');
         },

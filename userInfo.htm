@@ -7,14 +7,24 @@
 
 <body>
     <div class='container'>
-        <h1>用户资料</h1>
+        <h1 id='name'>用户资料</h1>
         <hr />
         <table id='infoTable'>
             <tr>
-                <th></th>
+                <th style="width: 5em;">项目</th>
+                <th>值</th>
             </tr>
             <tr>
-                <td></td>
+                <td>存储空间</td>
+                <td id='storageSpace'></td>
+            </tr>
+            <tr>
+                <td>账户名</td>
+                <td id='accountName'></td>
+            </tr>
+            <tr>
+                <td>状态</td>
+                <td id='status'></td>
             </tr>
         </table>
         <div class='alert alert-danger' id='failedBar'>无法显示用户资料</div>
@@ -34,7 +44,11 @@
                 },
                 success: function(data) {
                     if(data.code == 1) {
-                        console.log(data.obj);
+                        // console.log(data.obj);
+                        $("#storageSpace").text(data.obj.capacity + '/' + data.obj.userBean.userCapacity);
+                        $("#accountName").text(data.obj.userBean.userAccount);
+                        $("#status").text(data.obj.userBean.status);
+                        $("#name").text(data.obj.userBean.userName + ' 的个人资料');
                     }
                     if(data.code == -1) {
                         alert(data.msg);
