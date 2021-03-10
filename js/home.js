@@ -36,16 +36,6 @@ var app = new Vue({
         this.usrName = userName;
 
         this.queryList();
-        //---DEBUG 用---
-        // this.fileEntries = [{
-        //     id: 0,
-        //     sid: 'f414b8c8079d4a528687550a936706f5',
-        //     name: '20190831212552_TENBiU.jpg',
-        //     type: 'jpg',
-        //     size: '2.55KB   ',
-        //     audit: 'C',
-        //     uri: 'http://39.105.228.56:8081/1614442242710.jpg'
-        // }]
     },
     methods: {
         logout: function() {
@@ -193,7 +183,7 @@ var app = new Vue({
         },
         normalErrProc: function(xhr, status, err)
         {
-            console.log(xhr);//DEBUG
+            //console.log(xhr);//DEBUG
             if(status == "timeout") alertmsg = "服务器响应超时"
             if(status == "parseerror") alertmsg = "数据错误"
             if(status == "error") {
@@ -263,9 +253,9 @@ var app = new Vue({
                                     name: entry.attachName,
                                     type: entry.attachType,
                                     size: entry.attachSize,
-                                    audit: entry.auditStatus,
+                                    audit: (entry.auditStatus == 'P')? '通过' : '待审',
                                     uri: entry.attachViewUrl,
-                                    date: entry.createTime
+                                    date: new Date(+new Date(entry.createTime) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
                                 })
                             });
                             if(i == 0) this.fileEntries = null;
@@ -307,9 +297,9 @@ var app = new Vue({
                                     name: entry.attachName,
                                     type: entry.attachType,
                                     size: entry.attachSize,
-                                    audit: entry.auditStatus,
+                                    audit: (entry.auditStatus == 'P')? '通过' : '待审',
                                     uri: entry.attachViewUrl,
-                                    date: entry.createTime
+                                    date: new Date(+new Date(entry.createTime) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
                                 })
                             });
                             if(i == 0) this.fileEntries = null;

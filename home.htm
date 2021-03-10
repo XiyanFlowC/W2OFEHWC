@@ -1,10 +1,13 @@
+<!DOCTYPE html>
+<html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>文件管理</title>
     <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="./css/site.css" />
     <script src="./js/jquery-3.5.1.min.js"></script>
-    <script src="./js/bootstrap.js"></script>
-    <script src="./js/vue.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/vue.min.js"></script>
 
     <style>
         .space-forder-list {
@@ -92,7 +95,7 @@
             <!-- 空间分类列表 -->
             <div class="form-area">
                 <div class="form-area">
-                    <h4>分类筛选（文件夹） <a href="#" class="glyphicon glyphicon-list" @click="switchFoldersShow" title="切换列表显示"></a>
+                    <h4>文件夹 <a href="#" class="glyphicon glyphicon-list" @click="switchFoldersShow" title="切换列表显示"></a>
                     </h4>
                     <hr />
                     <div v-if="dirNo == null">
@@ -106,18 +109,19 @@
                     </div>
                     <div v-else>
                         <a href="#" @click='backMainDir'>
-                            查看全部分类文件</a>
+                            查看全部文件</a>
                     </div>
                     <input v-model='folderName' type='text' placeholder="新建文件夹名称" class='form-control' style='display: inline; width: 60%; max-width: 30rem' />
                     <a href='#' class="glyphicon glyphicon-add" @click='addFold' style='font-size: large; display: inline;'>+</a>
                 </div>
                 
                     <div class='form-area' v-if='dirNo != null'>
-                        <h4>分类选项</h4>
+                        <h4>文件夹选项</h4>
                         <hr />
-                        <button type="button" class='btn btn-danger' @click='removeFold(dirNo)'>删除</button>
-                        <input type='text' v-model='foldRename' placeholder="输入新分类名" style='max-width: 34em; width: 40%' class="form-control show-inline" />
+                        
+                        <input type='text' v-model='foldRename' placeholder="输入新文件夹名" style='max-width: 34em; width: 40%' class="form-control show-inline" />
                         <button type="button" class='btn btn-primary' @click='rni(dirNo)'>重命名</button>
+                        <button type="button" class='btn btn-danger' @click='removeFold(dirNo)'>删除</button>
                     </div>
             </div>
 
@@ -193,3 +197,4 @@
     </div>
     <script src="./js/home.js"></script>
 </body>
+</html>
