@@ -17,7 +17,14 @@ var app = new Vue({
         folderName: "",
         fileRename: "",
         foldRename: '',
-        usrName: ''
+        usrName: '',
+        listPage: {
+            currentPage: 1,
+            totalPage: 0,
+            pageDivideNum: 20,
+            targetPage: 1,
+            entryFragment: []
+        }
     },
     created: function() {
         var userNo = localStorage.getItem('usrNo');
@@ -38,6 +45,27 @@ var app = new Vue({
         this.queryList();
     },
     methods: {
+        pagePrev: function() {
+            this.pgjmp(this.listPage.currentPage - 1);
+        },
+        pageNext: function() {
+            this.pgjmp(this.listPage.currentPage + 1);
+        },
+        pageRefresh: function() {
+            this.listPage.totalPage = Math.ceil(this.fileEntries.length / this.listPage.pageDivideNum);
+            this.pgjmp(1);
+        },
+        pgjmp(page) {
+            let sta = this.listPage.pageDivideNum * (page - 1);
+            let fin = this.listPage.pageDivideNum * page;
+            if(fin > this.fileEntries.length) fin = this.fileEntries.length;
+            //fin -= 1;
+
+            this.listPage.entryFragment = this.fileEntries.slice(sta, fin);
+
+            this.listPage.currentPage = page;
+            this.listPage.targetPage = page;
+        },
         logout: function() {
             localStorage.removeItem('usrName');
             localStorage.removeItem('usrNo');
@@ -242,6 +270,7 @@ var app = new Vue({
 
                             if(data.obj.length == 0) {
                                 this.fileEntries = null;
+                                this.pageRefresh();
                                 return;}
                             this.fileEntries = new Array();
                             let i = 0
@@ -259,6 +288,7 @@ var app = new Vue({
                                 })
                             });
                             if(i == 0) this.fileEntries = null;
+                            this.pageRefresh();
                         }
                         else if(data.code == -1) {this.warnmsg = "错误：" + data.msg}
                         else {
@@ -303,6 +333,7 @@ var app = new Vue({
                                 })
                             });
                             if(i == 0) this.fileEntries = null;
+                            this.pageRefresh();
                             if(data.obj.indexBeanList.length == 0) return;
                             this.spaceFolders = new Array();
                             //TODO:处理indexBeanList

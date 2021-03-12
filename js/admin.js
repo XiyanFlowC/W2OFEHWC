@@ -42,6 +42,18 @@ var app = new Vue({
         this.queryList();
     },
     methods: {
+        clearWarn: function() {
+            this.warnmsg = '';
+        },
+        clearErr: function() {
+            this.errmsg = '';
+        },
+        logout: function() {
+            localStorage.removeItem('usrNo');
+            localStorage.removeItem('usrName');
+            localStorage.removeItem('token');
+            top.location = 'adminlogin.htm';
+        },
         clearMsg: function() {this.msg = ''},
         userInfo: function(id) {
             window.open('userInfo.htm?id=' + encodeURI(id), '_blank', 'location=no,menubar=no,status=no,height=300,width=400');
@@ -206,7 +218,8 @@ var app = new Vue({
                                 size: entry.attachSize,
                                 uri: entry.attachViewUrl,
                                 type: entry.attachType,
-                                date: entry.createTime
+                                date: entry.createTime,
+                                user: entry.createUser
                             })
                         })
                     }

@@ -26,6 +26,10 @@
                     <ul class="nav navbar-nav">
                         <li><a href="#" @click="listView">审批</a></li>
                     </ul>
+                    <ul class='nav navbar-nav navbar-right'>
+                        <li><a href="#" @click='userInfo'>{{usrName}}</a></li>
+                        <li><a href='#' @click='logout' class='glyphicon glyphicon-off'></a></li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -48,7 +52,7 @@
                         <td><div class="filenm">文件名</div></td>
                         <td style="width:5em;" class='filefmt'><div >文件格式</div></td>
                         <td style="width:6em;" class="filesz"><div >文件大小</div></td>
-                        <!-- <td style="width:5em;" class= 'filead'><div>审核状态</div></td>这个需要暴露给用户么？ -->
+                        <td style="width:7em;" class= 'filead'><div>用户</div></td>这个需要暴露给用户么？
                         <td style="width:6em;" class="option"><div>操作</div></td><!--如果修改成图标这里也要改小-->
                     </tr>
                     <tr v-for="entry in fileEntries" :key="entry.id" class="file-list-row">
@@ -56,7 +60,7 @@
                         <td><a href="#" class='file-link' @click='previewWnd(entry)'>{{entry.name}}</a></td>
                         <td class="filefmt">{{entry.type}}</td>
                         <td class="filesz">{{entry.size}}</td>
-                        <!-- <td class="filead">{{entry.audit}}</td> -->
+                        <td class="filead">{{entry.user}}</td>
                         <td >
                             <span class='controller'>
                                 <a href='#' class='glyphicon glyphicon-info-sign' @click="previewWnd(entry)"></a>
