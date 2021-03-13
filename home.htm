@@ -116,9 +116,9 @@
                         <a href="#" @click='backMainDir'>
                             查看全部文件</a>
                     </div>
-                    <input v-model='folderName' type='text' placeholder="新建文件夹名称" class='form-control'
+                    <input v-show='showFolds' v-model='folderName' type='text' placeholder="新建文件夹名称" class='form-control'
                         style='display: inline; width: 60%; max-width: 30rem' />
-                    <a href='#' class="glyphicon glyphicon-add" @click='addFold'
+                    <a v-show='showFolds' href='#' class="glyphicon glyphicon-add" @click='addFold'
                         style='font-size: large; display: inline;'>+</a>
                 </div>
 
@@ -165,9 +165,9 @@
                             <td class="filead">{{entry.audit}}</td>
                             <td>
                                 <span class='controller'>
-                                    <a href='#' class='glyphicon glyphicon-tags' @click="previewWnd(entry)"></a>
-                                    <a href='#' class="glyphicon glyphicon-remove" @click="rmitem(entry.sid)"></a>
-                                    <a href='#' class="glyphicon glyphicon-save" @click="downld(entry)"></a>
+                                    <a href='#' class='glyphicon glyphicon-tags' @click="previewWnd(entry)" title='详细'></a>
+                                    <a href='#' class="glyphicon glyphicon-remove text-danger" @click="rmitem(entry.sid)" title='删除'></a>
+                                    <a href='#' class="glyphicon glyphicon-save" @click="downld(entry)" title='下载'></a>
                                 </span>
                             </td>
                         </tr>
@@ -224,7 +224,10 @@
                         v-if="viewPara.format == 'jpg' || viewPara.format == 'png' || viewPara.format == 'gif' || viewPara.format == 'jpeg' || viewPara.format == 'bmp'">
                         <img :src="viewPara.uri" alt="一幅图像，它是你所选择之图像的预览" style="max-width: 100%; margin: 0 auto;" />
                     </div>
-                    <div class="center-block text-danger" v-else style="font-size:x-large;">图像预览不可用</div>
+                    <div v-if='viewPara.format == "txt"'>
+                        <iframe :src="viewPara.uri" width="100%" height="100%">请升级浏览器</iframe>
+                    </div>
+                    <!-- <div class="center-block text-danger" v-else style="font-size:x-large;">预览不可用</div> -->
                     <hr />
                     <button type="button" class="btn btn-secondary" @click="listView">返回</button>
                 </div>

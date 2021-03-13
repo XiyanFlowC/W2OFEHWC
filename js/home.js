@@ -60,6 +60,10 @@ var app = new Vue({
             let fin = this.listPage.pageDivideNum * page;
             if(fin > this.fileEntries.length) fin = this.fileEntries.length;
             //fin -= 1;
+            if(sta > this.fileEntries.length - 1) {
+                alert('页码无效');
+                return;
+            }
 
             this.listPage.entryFragment = this.fileEntries.slice(sta, fin);
 
@@ -392,7 +396,7 @@ var app = new Vue({
                 return;
             }
             formData.append("file", fileList[0]);
-            if(this.dirNo != "") {
+            if(this.dirNo != null) {
                 formData.append('indexNo', this.dirNo);
             }
             $.ajax({
