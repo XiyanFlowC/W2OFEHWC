@@ -21,7 +21,7 @@
             <input v-model="rptpswd" type="password" id="repeatPassword" class="form-control" placeholder="重复密码" required/>
             <div class="control-group">
                 <input v-model="veryficode" type="text" id="vfcodeInput" class="form-control" placeholder="验证码" style="width: 60%; min-width: 10rem; display:table-cell" required/>
-                <button id='sndmlbtn' @click="sendvfcode" type="button" class="btn" style="width: 30%; display: table-cell;">发送验证码</button><div id='cdshow'></div>
+                <button id='sndmlbtn' @click="sendvfcode" type="button" class="btn" style="width: 30%; display: table-cell;">发送验证码</button><span id='cdshow'>&nbsp;</span>
             </div>
             <div style="text-align: right; margin: 0"><a href="login.htm">我已有账号</a></div>
             <button class="btn btn-lg btn-primary btn-block" type="button" @click="reg">注册</button>
@@ -57,61 +57,63 @@
                     }
                     $('#sndmlbtn').hide();
                     a = 59;
+                    $('#cdshow').show();
                     let intfunc = setInterval(() => {
                         $('#cdshow').text(a + '秒后可重新发送');
                         --a;
                     }, 1000);
                     let timfunc = setTimeout(() => {
                         $('#cdshow').text('');
-                        clearInterval(func);
+                        $('#cdshow').hide();
+                        clearInterval(intfunc);
                         $('#sndmlbtn').show();
                     }, 60000);
-                    $.ajax({
-                        url: apirt + "/user/sendEmail",
-                        type: "POST",
-                        data: {
-                            email: this.accound
-                        },
-                        success: (data, status, xhr) => {
-                            if(data.code == 1)
-                            {
-                                //console.log(data);
-                                this.chkvfcode = data.obj.code;
-                                this.tmvfcode = data.obj.time;
-                            }
-                            else if(data.code == -1)
-                            {
-                                $('#sndmlbtn').show();
-                                clearInterval(intfunc);
-                                clearTimeout(timfunc);
-                                $('@cdshow').text('');
-                                this.alertmsg = data.msg;
-                            }
-                            else this.alertmsg = '接口返回结果违反规范'
-                        },
-                        error: (xhr, status, err) => {
-                            $('#sndmlbtn').show();
-                            if(status == "timeout") alertmsg = "服务器响应超时"
-                            if(status == "parseerror") alertmsg = "数据错误"
-                            if(status == "error") 
-                            {
-                                switch (xhr.status) {
-                                    case 404:
-                                        this.alertmsg = "服务器资源不存在"
-                                        break;
-                                    case 403:
-                                        this.alertmsg = "服务器拒绝访问"
-                                        break;
-                                    case 500:
-                                        this.alertmsg = "服务器内部错误，恭喜后端同学"
-                                        break;
-                                    default:
-                                        this.alertmsg = "服务器未知错误"
-                                        break;
-                                }
-                            }
-                        }
-                    })
+                    // $.ajax({
+                    //     url: apirt + "/user/sendEmail",
+                    //     type: "POST",
+                    //     data: {
+                    //         email: this.accound
+                    //     },
+                    //     success: (data, status, xhr) => {
+                    //         if(data.code == 1)
+                    //         {
+                    //             //console.log(data);
+                    //             this.chkvfcode = data.obj.code;
+                    //             this.tmvfcode = data.obj.time;
+                    //         }
+                    //         else if(data.code == -1)
+                    //         {
+                    //             $('#sndmlbtn').show();
+                    //             clearInterval(intfunc);
+                    //             clearTimeout(timfunc);
+                    //             $('@cdshow').text('');
+                    //             this.alertmsg = data.msg;
+                    //         }
+                    //         else this.alertmsg = '接口返回结果违反规范'
+                    //     },
+                    //     error: (xhr, status, err) => {
+                    //         $('#sndmlbtn').show();
+                    //         if(status == "timeout") alertmsg = "服务器响应超时"
+                    //         if(status == "parseerror") alertmsg = "数据错误"
+                    //         if(status == "error") 
+                    //         {
+                    //             switch (xhr.status) {
+                    //                 case 404:
+                    //                     this.alertmsg = "服务器资源不存在"
+                    //                     break;
+                    //                 case 403:
+                    //                     this.alertmsg = "服务器拒绝访问"
+                    //                     break;
+                    //                 case 500:
+                    //                     this.alertmsg = "服务器内部错误，恭喜后端同学"
+                    //                     break;
+                    //                 default:
+                    //                     this.alertmsg = "服务器未知错误"
+                    //                     break;
+                    //             }
+                    //         }
+                    //     }
+                    // })
                 },
                 reg : function() {
                     if(this.accound == "")

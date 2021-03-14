@@ -52,10 +52,16 @@ var app = new Vue({
             this.pgjmp(this.listPage.currentPage + 1);
         },
         pageRefresh: function() {
+            if(this.fileEntries == null) return;
             this.listPage.totalPage = Math.ceil(this.fileEntries.length / this.listPage.pageDivideNum);
             this.pgjmp(1);
         },
         pgjmp(page) {
+            if(this.fileEntries == null) {
+                this.listPage.entryFragment = null;
+                return;
+            }
+
             let sta = this.listPage.pageDivideNum * (page - 1);
             let fin = this.listPage.pageDivideNum * page;
             if(fin > this.fileEntries.length) fin = this.fileEntries.length;
