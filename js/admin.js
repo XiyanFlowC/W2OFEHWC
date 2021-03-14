@@ -258,7 +258,7 @@ var app = new Vue({
                                 uri: entry.attachViewUrl,
                                 type: entry.attachType,
                                 date: new Date(+new Date(entry.createTime) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''),
-                                user: entry.userNo//TODO:使人性化
+                                user: entry.createUser//TODO:使人性化
                             })
                         })
                         this.pageRefresh();
