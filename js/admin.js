@@ -21,7 +21,14 @@ var app = new Vue({
         //Parameters among views
         viewPara: null,
         //PreviewWnd
-        fileRename: ''
+        fileRename: '',
+        listPage: {
+            currentPage: 1,
+            totalPage: 0,
+            pageDivideNum: 10,
+            targetPage: 1,
+            entryFragment: []
+        }
     },
     created: function() {
         var userNo = localStorage.getItem('usrNo');
@@ -42,6 +49,37 @@ var app = new Vue({
         this.queryList();
     },
     methods: {
+        pagePrev: function() {
+            this.pgjmp(this.listPage.currentPage - 1);
+        },
+        pageNext: function() {
+            this.pgjmp(this.listPage.currentPage + 1);
+        },
+        pageRefresh: function() {
+            if(this.fileEntries == null) return;
+            this.listPage.totalPage = Math.ceil(this.fileEntries.length / this.listPage.pageDivideNum);
+            this.pgjmp(1);
+        },
+        pgjmp(page) {
+            if(this.fileEntries == null) {
+                this.listPage.entryFragment = null;
+                return;
+            }
+
+            let sta = this.listPage.pageDivideNum * (page - 1);
+            let fin = this.listPage.pageDivideNum * page;
+            if(fin > this.fileEntries.length) fin = this.fileEntries.length;
+            //fin -= 1;
+            if(sta > this.fileEntries.length - 1) {
+                alert('页码无效');
+                return;
+            }
+
+            this.listPage.entryFragment = this.fileEntries.slice(sta, fin);
+
+            this.listPage.currentPage = page;
+            this.listPage.targetPage = page;
+        },
         clearWarn: function() {
             this.warnmsg = '';
         },
@@ -205,6 +243,7 @@ var app = new Vue({
                     if(data.code == 1) {
                         if(data.obj.length == 0) {
                             this.fileEntries = null;
+                            this.pageRefresh();
                             return;
                         }
                         this.fileEntries = new Array();
@@ -219,9 +258,10 @@ var app = new Vue({
                                 uri: entry.attachViewUrl,
                                 type: entry.attachType,
                                 date: new Date(+new Date(entry.createTime) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''),
-                                user: entry.createUser
+                                user: entry.userNo//TODO:使人性化
                             })
                         })
+                        this.pageRefresh();
                     }
                 },
                 error: this.normalErrProc

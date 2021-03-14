@@ -21,7 +21,7 @@ var app = new Vue({
         listPage: {
             currentPage: 1,
             totalPage: 0,
-            pageDivideNum: 20,
+            pageDivideNum: 10,
             targetPage: 1,
             entryFragment: []
         }
@@ -276,7 +276,7 @@ var app = new Vue({
                 success: (data, status, jqXHR) => {
                     if(jqXHR.status == 200) {
                         if(data.code == 1) {
-                            console.log(data.obj);//TODO：处理obj
+                            //console.log(data.obj);//TODO：处理obj
 
                             if(data.obj.length == 0) {
                                 this.fileEntries = null;
